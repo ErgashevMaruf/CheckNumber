@@ -1,0 +1,28 @@
+import { Directive, ElementRef, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appNumber]'
+})
+export class NumberDirective {
+
+    regexp = '^[0-9]'
+  constructor(private el: ElementRef) {
+
+   }
+   @HostListener('keypress', ['$event'])
+   onKeypress(event:any)
+   {
+    return new RegExp(this.regexp).test(event.key);
+   }
+   @HostListener('paste', ['$event'])
+   blockposte(event:ClipboardEvent)
+   {
+    this.validateFields(event);
+   }
+   validateFields(event:ClipboardEvent)
+   {
+    event.preventDefault();
+    const pasteData = event.clipboardData.getData('text/plain').replace(/[^0-9]/g,'');
+    document.execCommand('insertHTML', false, pasteData);
+   }
+}
